@@ -16,24 +16,37 @@
 
 import argparse
 import logging
-import twitter_bot_utils as tbu
-from . import __version__ as version
+#import twitter_bot_utils as tbu
+#from . import __version__ as version
 from .everylot import EveryLot
+from mastodon import Mastodon
+import yaml
 
+dry_run = False
 
 def main():
+    print('difference made?')
     parser = argparse.ArgumentParser(description='every lot twitter bot')
-    parser.add_argument('screen_name', metavar='SCREEN_NAME', type=str, help='Twitter screen name (without @)')
+    #parser.add_argument('screen_name', metavar='SCREEN_NAME', type=str, help='Twitter screen name (without @)')
     parser.add_argument('database', metavar='DATABASE', type=str, help='path to SQLite lots database')
+    parser.add_argument('config', type=str, default=None, metavar='CONFIG',
+                        help='config file location uhh')
     parser.add_argument('--id', type=str, default=None, help='tweet the entry in the lots table with this id')
     parser.add_argument('-s', '--search-format', type=str, default=None, metavar='STRING',
                         help='Python format string use for searching Google')
     parser.add_argument('-p', '--print-format', type=str, default=None, metavar='STRING',
                         help='Python format string use for poster to Twitter')
-    tbu.args.add_default_args(parser, version=version, include=('config', 'dry-run', 'verbose', 'quiet'))
+    #tbu.args.add_default_args(parser, version=version, include=('config', 'dry-run', 'verbose', 'quiet'))
 
     args = parser.parse_args()
-    api = tbu.api.API(args)
+    #print(args)
+    #print(args.config)
+    #return
+    #api = tbu.api.API(args)
+    with open(args.config, 'r') as f:
+        config = yaml.safe_load(f)
+
+    mast = Mastodon(access_token=config['mastotok'], api_base_url=config['mastosrv'])
 
     logger = logging.getLogger(args.screen_name)
     logger.debug('everylot starting with %s, %s', args.screen_name, args.database)
@@ -53,19 +66,24 @@ def main():
 
     # Get the streetview image and upload it
     # ("sv.jpg" is a dummy value, since filename is a required parameter).
-    image = el.get_streetview_image(api.config['streetview'])
-    media = api.media_upload('sv.jpg', file=image)
-
+    image = el.get_streetview_image(config['streetview'])
+    #media = api.media_upload('sv.jpg', file=image)
+    media = mast.media_post(image, mime_type='Image/PNG')
+    # shit is it a png?
     # compose an update with all the good parameters
     # including the media string.
-    update = el.compose(media.media_id_string)
-    logger.info(update['status'])
-
-    if not args.dry_run:
+    update = el.compose(media.id)
+    mast.media_update(media.id, description=update['status'])
+    #print(update)
+    #return
+    #logger.info(update['status'])
+    #mast.media_post(image,)
+    if not dry_run:
         logger.debug("posting")
-        status = api.update_status(**update)
+        posted = mast.status_post(update['status'], media_ids=update['media_ids'])
+        #status = api.update_status(**update)
         try:
-            el.mark_as_tweeted(status.id)
+            el.mark_as_tweeted(posted.id)
         except AttributeError:
             el.mark_as_tweeted('1')
 
