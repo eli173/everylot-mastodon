@@ -48,7 +48,7 @@ def main():
 
     mast = Mastodon(access_token=config['mastotok'], api_base_url=config['mastosrv'])
 
-    #logger = logging.getLogger(args.screen_name)
+    logger = logging.getLogger("elbmasto")
     #logger.debug('everylot starting with %s, %s', args.screen_name, args.database)
 
     el = EveryLot(args.database,
