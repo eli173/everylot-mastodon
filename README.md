@@ -1,4 +1,39 @@
-# every lot bot
+# every lot bot - masto edition
+
+This is a quick and hacky update to fitnr's excellent every lot bot to run on mastodon instances
+By and large, most of the necessary setup is the same, but with significant changes to the yaml configuration file and invoking the command. Nothing complicated.
+
+If you feel something is amiss, or if I've made some sort of error or something, lemme know! I'd like to make this better if folks would like me to. But until someone tells me, it works in my usecase so I'm going to assume it works in yours too.
+
+Maybe in the future (or if you people tell me to enough?) I'll do one that can simultaneously hit up twitter and mastodon in a reasonably robust way.
+
+Most likely you can find a working version at <a href="https://soc.eli173.com/@jedeParzelleBerlin">@jedeParzelleBerlin@soc.eli173.com</a>, which is the mastodon analog to the <a href="https://twitter.com/ParzellenBerlin/">@ParzellenBerlin</a> bot which I'm also running.
+
+## getting a mastodon token
+In the account you've made for the bot, go to the 'Development' tab of your settings, hit the 'New application' button and name it. Optionally fill in some other fields, and maybe make sure that you've got write permissions, but you can probably get away with just naming it. Once it's made, go ahead and save the 'Your access token' for later.
+
+You may want to mark the account as a bot.
+
+## new yaml setup
+It's less organized but maybe a bit easier.
+Looks like this:
+```
+streetview: streetview-key-goes-here
+mastotok: the-token-from-prior-step
+mastosrv: https://base.mastodon.url
+```
+
+# calling the command
+To call it, it's much the same as before, but you don't need to specify the handle. The command in the cronjob I'm running roughly resembles
+```
+$HOME/.local/bin/mastolot /path/to/database.db /path/to/conf.yaml
+```
+
+I may have altered the way arguments are handled in some terrible way, if I've broken something it'll most likely be here. Lemme know if you find something.
+
+Okay, that's pretty much it I think. Shouldn't be too hard to migrate from twitter.
+
+# Original README (from original twitter version) follows:
 
 This library supports a Twitter bot that posts Google Streetview pictures of every property in an SQLite database. 
 Existing instances of the bot: <a href="https://twitter.com/everylotnyc">@everylotnyc</a>, <a href="https://twitter.com/everylotchicago">@everylotchicago</a>, <a href="https://twitter.com/everylotsf">@everylotsf</a> and <a href="https://twitter.com/everylotla">@everylotla</a>. Since maps are instruments of power, these bots is a way of generating a tension between two different modes establishing power in urban space. [Read more about that](http://fakeisthenewreal.org/everylot/).
