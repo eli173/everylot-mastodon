@@ -7,7 +7,7 @@ If you feel something is amiss, or if I've made some sort of error or something,
 
 Maybe in the future (or if you people tell me to enough?) I'll do one that can simultaneously hit up twitter and mastodon in a reasonably robust way.
 
-Most likely you can find a working version at <a href="https://soc.eli173.com/@jedeParzelleBerlin">@jedeParzelleBerlin@soc.eli173.com</a>, which is the mastodon analog to the <a href="https://twitter.com/ParzellenBerlin/">@ParzellenBerlin</a> bot which I'm also running.
+Most likely you can find a working version at <a href="https://soc.eli173.com/@jedeParzelleBerlin">https://soc.eli173.com/@jedeParzelleBerlin</a>, which is the mastodon analog to the <a href="https://twitter.com/ParzellenBerlin/">@ParzellenBerlin</a> bot which I'm also running.
 
 ## getting a mastodon token
 In the account you've made for the bot, go to the 'Development' tab of your settings, hit the 'New application' button and name it. Optionally fill in some other fields, and maybe make sure that you've got write permissions, but you can probably get away with just naming it. Once it's made, go ahead and save the 'Your access token' for later.
